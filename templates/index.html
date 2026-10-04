@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Gästbok{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <h2>Skriv ett inlägg</h2>
+    <form action="{{ url_for('add_entry') }}" method="post">
+        <label for="name">Namn *</label>
+        <input type="text" id="name" name="name" required maxlength="60">
+
+        <label for="email">E-post</label>
+        <input type="email" id="email" name="email" maxlength="50">
+
+        <label for="homepage">Hemsida</label>
+        <input type="url" id="homepage" name="homepage" maxlength="200" placeholder="https://...">
+
+        <label for="comment">Kommentar *</label>
+        <textarea id="comment" name="comment" required maxlength="500" rows="4"></textarea>
+
+        <button type="submit">Skicka</button>
+    </form>
+</section>
+
+<section class="entries-section">
+    <h2>Inlägg ({{ entries|length }})</h2>
+
+    {% if entries %}
+        <ul class="entries">
+            {% for entry in entries %}
+            <li class="entry">
+                <div class="entry-header">
+                    <span class="entry-name">
+                        {% if entry.homepage %}
+                            <a href="{{ entry.homepage }}" target="_blank" rel="noopener noreferrer">{{ entry.name }}</a>
+                        {% else %}
+                            {{ entry.name }}
+                        {% endif %}
+                    </span>
+                    <span class="entry-time">{{ entry.time }}</span>
+                </div>
+                <p class="entry-comment">{{ entry.comment }}</p>
+                {% if entry.email %}
+                <p class="entry-email">{{ entry.email }}</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty">Inga inlägg än. Bli den första att skriva något!</p>
+    {% endif %}
+</section>
+{% endblock %}
